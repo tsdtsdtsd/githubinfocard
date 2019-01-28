@@ -1,0 +1,29 @@
+This is the complete query:
+
+query { 
+  repository(owner:"pi-hole", name:"pi-hole") {
+    
+    forks {
+        totalCount
+    }
+    
+    stargazers {
+        totalCount
+    }
+    
+    issues(states:OPEN) {
+        totalCount
+    }
+    
+    commitComments(last:1) {
+        nodes{
+            publishedAt
+    }}
+    
+    releases(last:1) {
+        nodes{
+            name
+            publishedAt
+    }}
+  } 
+}
