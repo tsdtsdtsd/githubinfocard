@@ -25,5 +25,12 @@ query {
             name
             publishedAt
     }}
+    
+    languages(first:50) {
+        nodes{
+            name
+            color
+    }}
+    
   } 
 }
