@@ -16,3 +16,7 @@ script:
   - golint ./...
   - go build -o example-cli ./example/cli
   - go test -race 
+
+matrix:
+  allow_failures:
+    - go: 'tip'
