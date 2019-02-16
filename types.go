@@ -2,6 +2,7 @@ package githubinfocard
 
 import "github.com/shurcooL/githubv4"
 
+// Graph explains the GraphQL request & response
 type Graph struct {
 	Repository struct {
 		DatabaseID  githubv4.Int

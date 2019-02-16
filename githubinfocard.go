@@ -54,6 +54,10 @@ func Load(url, token string) (*Card, int, error) {
 		return &c, 0, fmt.Errorf("URL invalid, expected \"ownerName/repoName\", got \"%s\"", tmp)
 	}
 
+	if parts[0] == "" || parts[1] == "" {
+		return &c, 0, fmt.Errorf("URL invalid, expected \"ownerName/repoName\", got \"%s\"", tmp)
+	}
+
 	c.Owner = parts[0]
 	c.Name = parts[1]
 
