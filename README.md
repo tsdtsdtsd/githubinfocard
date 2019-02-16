@@ -2,8 +2,11 @@
 
 > Experimental Go library which fetches summaries of GitHub repositories
 
+[![Godoc][godoc-image]][godoc-url]
 [![Build Status][travis-image]][travis-url]
+[![Go Report Card][grc-image]][grc-url]
 
+![CLI example](example/cli/screenshot.png "CLI example")
 ## Idea
 
 I wanted to create an element on my blog, which displays a summary for a given GitHub repository. It could show visitors information like:
@@ -18,8 +21,6 @@ As I never messed with GraphQL, I thought that this is the perfect opportunity t
 
 My current idea is to develop a library that helps fetching the data. <br>
 As an example and testing application, I want to add a CLI client, which just shows the desired data in an extraordinarily unspectacular manner.
-
-Oh, and this is a plan-as-you-develop kind of project ...
 
 ## GitHub API
 
@@ -52,3 +53,7 @@ GITHUB_TOKEN=##TOKEN## bash -c 'go run example/cli/cli.go --url https://github.c
 <!-- Markdown link & img dfn's -->
 [travis-image]: https://travis-ci.org/tsdtsdtsd/githubinfocard.svg?branch=master
 [travis-url]: https://travis-ci.org/tsdtsdtsd/githubinfocard
+[grc-image]: https://goreportcard.com/badge/github.com/tsdtsdtsd/githubinfocard
+[grc-url]: https://goreportcard.com/report/github.com/tsdtsdtsd/githubinfocard
+[godoc-image]: https://godoc.org/github.com/tsdtsdtsd/githubinfocard?status.svg
+[godoc-url]: https://godoc.org/github.com/tsdtsdtsd/githubinfocard

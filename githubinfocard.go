@@ -46,20 +46,55 @@ func Load(url, token string) (*Card, int, error) {
 	}
 
 	// Extract owner and repo name from url
+	var err error
+	c.Owner, c.Name, err = parseURL(url)
+	if err != nil {
+		return &c, 0, err
+	}
+
+	// API call
+	graph, err := fetchGraph(token, c.Owner, c.Name)
+	if err != nil {
+		return &c, 0, err
+	}
+	// printJSON(graph)
+
+	// Extract from graph
+	c.Forks = int(graph.Repository.Forks.TotalCount)
+	c.OpenIssues = int(graph.Repository.Issues.TotalCount)
+	c.Stars = int(graph.Repository.Stargazers.TotalCount)
+
+	if len(graph.Repository.Releases.Nodes) >= 1 {
+		c.LastRelease = string(graph.Repository.Releases.Nodes[0].Name)
+	}
+
+	for _, lang := range graph.Repository.Languages.Nodes {
+		c.Languages = append(c.Languages, Language{
+			Name:  string(lang.Name),
+			Color: string(lang.Color),
+		})
+	}
+
+	return &c, int(graph.RateLimit.Remaining), nil
+}
+
+func parseURL(url string) (string, string, error) {
 
 	tmp := strings.Replace(url, githubPrefix, "", -1)
 	tmp = strings.TrimRight(tmp, "/")
 	parts := strings.Split(tmp, "/")
 	if len(parts) != 2 {
-		return &c, 0, fmt.Errorf("URL invalid, expected \"ownerName/repoName\", got \"%s\"", tmp)
+		return "", "", fmt.Errorf("URL invalid, expected \"ownerName/repoName\", got \"%s\"", tmp)
 	}
 
 	if parts[0] == "" || parts[1] == "" {
-		return &c, 0, fmt.Errorf("URL invalid, expected \"ownerName/repoName\", got \"%s\"", tmp)
+		return "", "", fmt.Errorf("URL invalid, expected \"ownerName/repoName\", got \"%s\"", tmp)
 	}
 
-	c.Owner = parts[0]
-	c.Name = parts[1]
+	return parts[0], parts[1], nil
+}
+
+func fetchGraph(token, owner, repo string) (*Graph, error) {
 
 	src := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: token},
@@ -68,34 +103,17 @@ func Load(url, token string) (*Card, int, error) {
 	client := githubv4.NewClient(httpClient)
 
 	gqlVars := map[string]interface{}{
-		"repositoryOwner": githubv4.String(parts[0]),
-		"repositoryName":  githubv4.String(parts[1]),
+		"repositoryOwner": githubv4.String(owner),
+		"repositoryName":  githubv4.String(repo),
 	}
 
-	var result Graph
-	err := client.Query(context.Background(), &result, gqlVars)
+	var graph Graph
+	err := client.Query(context.Background(), &graph, gqlVars)
 	if err != nil {
-		return &c, 0, fmt.Errorf("could not query GitHub API: \"%s\"", err.Error())
+		return &graph, fmt.Errorf("could not query GitHub API: \"%s\"", err.Error())
 	}
 
-	// printJSON(result)
-
-	c.Forks = int(result.Repository.Forks.TotalCount)
-	c.OpenIssues = int(result.Repository.Issues.TotalCount)
-	c.Stars = int(result.Repository.Stargazers.TotalCount)
-
-	if len(result.Repository.Releases.Nodes) >= 1 {
-		c.LastRelease = string(result.Repository.Releases.Nodes[0].Name)
-	}
-
-	for _, lang := range result.Repository.Languages.Nodes {
-		c.Languages = append(c.Languages, Language{
-			Name:  string(lang.Name),
-			Color: string(lang.Color),
-		})
-	}
-
-	return &c, int(result.RateLimit.Remaining), nil
+	return &graph, nil
 }
 
 // printJSON prints v as JSON encoded with indent to stdout. It panics on any error.
