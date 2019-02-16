@@ -46,7 +46,7 @@ cmd /V /C "set GITHUB_TOKEN=##TOKEN## && go run example\cli\cli.go --url https:/
 ### Linux
 
 ```
-GITHUB_TOKEN=##TOKEN## && go run example\cli\cli.go --url https://github.com/torvalds/linux
+GITHUB_TOKEN=##TOKEN## bash -c 'go run example/cli/cli.go --url https://github.com/torvalds/linux
 ```
 
 <!-- Markdown link & img dfn's -->
