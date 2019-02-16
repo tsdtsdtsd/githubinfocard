@@ -21,6 +21,34 @@ As an example and testing application, I want to add a CLI client, which just sh
 
 Oh, and this is a plan-as-you-develop kind of project ...
 
+## GitHub API
+
+You need a *Personal access token* for the API, which you can [generate here](https://github.com/settings/tokens) (you need to be signed in first).
+
+## Usage
+
+```
+go get github.com/tsdtsdtsd/githubinfocard 
+```
+
+There is an example CLI client in `example/cli/`. It needs two things from you:
+- Environment variable named `GITHUB_TOKEN`, containing your personal access token
+- Parameter `--url` to indicate a repository
+
+The following commands assume that you are in `$GO_PATH/github.com/tsdtsdtsd/githubinfocard`:
+
+### Windows
+
+```
+cmd /V /C "set GITHUB_TOKEN=##TOKEN## && go run example\cli\cli.go --url https://github.com/torvalds/linux"
+```
+
+### Linux
+
+```
+GITHUB_TOKEN=##TOKEN## && go run example\cli\cli.go --url https://github.com/torvalds/linux
+```
+
 <!-- Markdown link & img dfn's -->
 [travis-image]: https://travis-ci.org/tsdtsdtsd/githubinfocard.svg?branch=master
 [travis-url]: https://travis-ci.org/tsdtsdtsd/githubinfocard
