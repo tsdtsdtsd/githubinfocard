@@ -8,9 +8,11 @@ before_install:
   - go get github.com/tsdtsdtsd/githubinfocard
   - go get -v golang.org/x/lint/golint
 
+install: false
 
 script:
   - diff <(gofmt -d .) <(echo -n)
-  - go vet -x ./...
+  - go vet ./...
   - golint ./...
+  - go build -o example-cli ./example/cli
   - go test -race 
